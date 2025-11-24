@@ -1,7 +1,23 @@
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
+
 import os
 
 app = FastAPI()
+
+# Allow requests from frontend
+origins = [
+    "https://phenomenal-youtiao-cdd6b2.netlify.app",  
+    "http://localhost:3000"                    # optional for local testing
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Fake database to store uploaded model info
 spaces_db = []
