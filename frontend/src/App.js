@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const BASE_URL = "https://aikosh-poc-production.up.railway.app/";
+const BASE_URL = "https://aikosh-poc-production.up.railway.app";
 
 function App() {
   const [models, setModels] = useState([]);
