@@ -1,14 +1,13 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-
 import os
 
 app = FastAPI()
 
-# Allow requests from frontend
+# Enable CORS for frontend
 origins = [
-    "https://phenomenal-youtiao-cdd6b2.netlify.app",  
-    "http://localhost:3000"                    # optional for local testing
+    "http://localhost:3000",
+    "https://phenomenal-youtiao-cdd6b2.netlify.app"  # replace with your Netlify URL
 ]
 
 app.add_middleware(
@@ -19,8 +18,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Fake database to store uploaded model info
+# Fake database
 spaces_db = []
+
+# ================== Endpoints ==================
 
 @app.get("/")
 def home():
@@ -29,14 +30,12 @@ def home():
 @app.post("/upload-model")
 async def upload_model(file: UploadFile = File(...)):
     save_path = f"uploaded_models/{file.filename}"
-
-    # Create folder if not exists
     os.makedirs("uploaded_models", exist_ok=True)
 
     with open(save_path, "wb") as f:
         f.write(await file.read())
 
-    # Store model info in database
+    # Store info
     spaces_db.append({
         "model_name": file.filename,
         "path": save_path,
@@ -49,3 +48,7 @@ async def upload_model(file: UploadFile = File(...)):
 def list_spaces():
     return spaces_db
 
+@app.get("/model-demo/{model_name}")
+def model_demo(model_name: str):
+    # Simulate a demo result
+    return {"model": model_name, "demo_result": "This is a POC demo output"}
